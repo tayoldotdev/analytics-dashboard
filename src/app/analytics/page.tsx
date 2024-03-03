@@ -1,33 +1,22 @@
 "use server"
 
 import { AnalyticsDashboard } from "@/components/AnalyticsDashboard";
-import { getDate } from "@/utils";
+import { countSpecificTotal, countTotal, getDate } from "@/utils";
 import { analytics } from "@/utils/analytics";
 
 export default async function Page() {
     const TRACKING_DAYS = 7;
 
     const pageviews = await analytics({}).retrieveDays("pageview", TRACKING_DAYS);
+    const configurator = await analytics({}).retrieveDays("configurator", TRACKING_DAYS);
 
-    const totalPageViews = pageviews.reduce((acc, cur) => {
-        return (acc + cur.events.reduce((acc, cur) => {
-            return (acc + Object.values(cur)[0]!)
-        }, 0))
-    }, 0);
+    const totalPageViews = countTotal(pageviews);
 
     const avgVisitorsPerDay = (totalPageViews / TRACKING_DAYS).toFixed(1);
 
-    const amtVisitorsToday = pageviews.filter((e) => {
+    const amtVisitorsToday = countTotal(pageviews.filter((e) => {
         return e.date === getDate()
-    }).reduce((acc, cur) => {
-        return (
-            acc + cur.events.reduce((acc, cur) => {
-                return (
-                    acc + Object.values(cur)[0]!
-                );
-            }, 0)
-        );
-    }, 0);
+    }));
 
     const topCountriesMap = new Map<string, number>();
 
@@ -66,6 +55,8 @@ export default async function Page() {
         }
     });
 
+    const sx15Views = countSpecificTotal(configurator, 'sx15');
+
     return (
         <div
             className="min-h-screen w-full py-12 flex justify-center items-center"
@@ -78,6 +69,9 @@ export default async function Page() {
                     amtVisitorsToday={amtVisitorsToday}
                     timeseriesPageviews={pageviews}
                     topCountries={topCountries}
+                    configuratorViews={{
+                        sx15: sx15Views
+                    }}
                 />
             </div>
         </div>

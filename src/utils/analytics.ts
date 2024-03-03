@@ -14,12 +14,13 @@ function Key(namespace: string) {
     return `analytics::${namespace}`;
 }
 
-export type RetrieveDaysPromise = Promise<{
+export type RetriveObject = {
     date: string;
     events: {
         [x: string]: number;
     }[];
-}[]>;
+}
+export type RetrieveDaysPromise = Promise<RetriveObject[]>;
 
 const DEFAULT_RETENTION = 60*60*24*7;
 

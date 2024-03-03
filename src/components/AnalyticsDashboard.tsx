@@ -10,6 +10,9 @@ interface Props {
     amtVisitorsToday: number;
     timeseriesPageviews: Awaited<RetrieveDaysPromise>
     topCountries: [string, number][]
+    configuratorViews: {
+        sx15: number;
+    }
 };
 
 function Badge({ percentage } : {percentage: number }) {
@@ -46,6 +49,7 @@ export function AnalyticsDashboard({
     amtVisitorsToday,
     timeseriesPageviews,
     topCountries,
+    configuratorViews,
 }: Props) {
     return (
         <div
@@ -81,6 +85,20 @@ export function AnalyticsDashboard({
                         className="text-3xl text-dark-tremor-content-strong font-semibold"
                     >
                         {amtVisitorsToday}
+                    </p>
+                </Card>
+                <Card
+                    className="w-full mx-auto max-w-xs"
+                >
+                    <p
+                        className='flex gap-2.5 items-center text-tremor-default text-dark-tremor-content'
+                    >
+                        SX-15
+                    </p>
+                    <p
+                        className="text-3xl text-dark-tremor-content-strong font-semibold"
+                    >
+                        {configuratorViews.sx15}
                     </p>
                 </Card>
             </div>
